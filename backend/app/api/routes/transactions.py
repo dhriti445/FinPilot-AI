@@ -38,7 +38,7 @@ async def upload_statement(file: UploadFile = File(...), current_user: UserOut =
     return UploadResponse(file_name=file.filename, processed_transactions=len(enriched), overview=overview, transactions=enriched)
 
 
-@router.get("", response_model=dict)
+@router.get("/", response_model=dict)
 async def list_transactions(current_user: UserOut = Depends(get_optional_current_user)):
     transactions = await store.list_transactions(current_user.id)
     return {"transactions": transactions}
