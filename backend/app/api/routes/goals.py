@@ -10,14 +10,14 @@ from .auth import get_optional_current_user
 router = APIRouter()
 
 
-@router.get("", response_model=dict)
+@router.get("/", response_model=dict)
 async def list_goals(current_user: UserOut = Depends(get_optional_current_user)):
     goals = await store.list_goals(current_user.id)
     planned = [orchestrator.goal_agent.plan(goal) | {"id": goal["id"]} for goal in goals]
     return {"goals": planned}
 
 
-@router.post("", response_model=dict)
+@router.post("/", response_model=dict)
 async def create_goal(payload: GoalCreate, current_user: UserOut = Depends(get_optional_current_user)):
     created = await store.create_goal(current_user.id, payload.model_dump())
     planned = orchestrator.goal_agent.plan(created) | {"id": created["id"]}
